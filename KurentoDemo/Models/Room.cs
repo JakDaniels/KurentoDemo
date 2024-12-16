@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +13,7 @@ namespace KurentoDemo.Models
         public string CreateUserName { set; get; }
         public string Path { set; get; }
         /// <summary>
-        /// 车牌
+        /// License Plate
         /// </summary>
         public string CarNo { set; get; }
 

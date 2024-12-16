@@ -21,9 +21,9 @@ namespace KurentoDemo.Hubs
                 {
                     await user.SendEndPoint.ReleaseAsync();
                 }
-                if (user.ReceviedEndPoints != null)
+                if (user.ReceivedEndPoints != null)
                 {
-                    foreach (var endPoint in user.ReceviedEndPoints.Values)
+                    foreach (var endPoint in user.ReceivedEndPoints.Values)
                     {
                         await endPoint.ReleaseAsync();
                     }
@@ -31,7 +31,7 @@ namespace KurentoDemo.Hubs
                 // Release resources of other users
                 foreach (var u in UserSessions.Values)
                 {
-                    if (u.ReceviedEndPoints.TryRemove(id, out WebRtcEndpoint endpoint))
+                    if (u.ReceivedEndPoints.TryRemove(id, out WebRtcEndpoint endpoint))
                     {
                         await endpoint.ReleaseAsync();
                     }

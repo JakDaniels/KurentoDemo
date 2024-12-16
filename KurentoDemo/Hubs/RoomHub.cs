@@ -41,7 +41,7 @@ namespace KurentoDemo.Hubs
             var userSession = new UserSession()
             {
                 Id = Context.ConnectionId,
-                ReceviedEndPoints = new ConcurrentDictionary<string, WebRtcEndpoint>(),
+                ReceivedEndPoints = new ConcurrentDictionary<string, WebRtcEndpoint>(),
                 SendEndPoint = null,
                 UserName = UserName
 
@@ -88,7 +88,7 @@ namespace KurentoDemo.Hubs
                                 Clients.Client(id).AddCandidate(id, arg.candidate);
                             };
                         }
-                        if (!selfSession.ReceviedEndPoints.TryGetValue(id, out WebRtcEndpoint otherEndPoint))
+                        if (!selfSession.ReceivedEndPoints.TryGetValue(id, out WebRtcEndpoint otherEndPoint))
                         {
                             otherEndPoint = await _kurento.CreateAsync(new WebRtcEndpoint(roomSession.Pipeline));
                             otherEndPoint.OnIceCandidate += arg =>
@@ -96,7 +96,7 @@ namespace KurentoDemo.Hubs
                                 Clients.Caller.AddCandidate(id, arg.candidate);
                             };
                             await otherSession.SendEndPoint.ConnectAsync(otherEndPoint);
-                            selfSession.ReceviedEndPoints.TryAdd(id, otherEndPoint);
+                            selfSession.ReceivedEndPoints.TryAdd(id, otherEndPoint);
                         }
                         return otherEndPoint;
                     }
@@ -106,15 +106,15 @@ namespace KurentoDemo.Hubs
         }
         public async Task ProcessCandidateAsync(string id, IceCandidate candidate)
         {
-            var endPonit = await GetEndPointAsync(id);
-            await endPonit.AddIceCandidateAsync(candidate);
+            var endPoint = await GetEndPointAsync(id);
+            await endPoint.AddIceCandidateAsync(candidate);
         }
         public async Task ProcessOfferAsync(string id, string offerSDP)
         {
-            var endPonit = await GetEndPointAsync(id);
-            var answerSDP = await endPonit.ProcessOfferAsync(offerSDP);
+            var endPoint = await GetEndPointAsync(id);
+            var answerSDP = await endPoint.ProcessOfferAsync(offerSDP);
             Clients.Caller.ProcessAnswer(id, answerSDP);
-            await endPonit.GatherCandidatesAsync();
+            await endPoint.GatherCandidatesAsync();
         }
     }
 }

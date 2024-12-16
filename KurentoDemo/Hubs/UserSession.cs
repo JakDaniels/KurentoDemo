@@ -17,6 +17,6 @@ namespace KurentoDemo
         [JsonIgnore]
         public WebRtcEndpoint SendEndPoint { set; get; }
         [JsonIgnore]
-        public ConcurrentDictionary<string, WebRtcEndpoint> ReceviedEndPoints { set; get; }
+        public ConcurrentDictionary<string, WebRtcEndpoint> ReceivedEndPoints { set; get; }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using KurentoDemo.Hubs;
+using Microsoft.Extensions.Hosting;
 
 namespace KurentoDemo
 {
@@ -22,16 +23,17 @@ namespace KurentoDemo
             //there is your kms address
             services.AddSingleton(p => new KurentoClient("ws://127.0.0.1:8888/kurento"));
             services.AddSingleton<RoomSessionManager>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(mvc => mvc.EnableEndpointRouting = false);
             services.AddSignalR(config =>
             {
                 config.EnableDetailedErrors = true;
             }).AddJsonProtocol(options =>
             {
-                options.PayloadSerializerSettings.DateFormatString = "yyyy/MM/dd HH:mm:ss";
+                // options.PayloadSerializerOptions.
+                // PayloadSerializerSettings.DateFormatString = "yyyy/MM/dd HH:mm:ss";
             });
         }
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -43,9 +45,11 @@ namespace KurentoDemo
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSignalR(routes =>
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapHub<RoomHub>("/roomHub");
+                endpoints.MapHub<RoomHub>("/roomHub");
+                endpoints.MapControllerRoute(name: "Default", pattern: "{controller=Home}/{action=Index}/{id?}");
             });
             app.UseMvc(routes =>
             {

@@ -16,7 +16,7 @@ namespace KurentoDemo.Hubs
         {
             if (UserSessions.TryRemove(id, out UserSession user))
             {
-                //释放自身资源
+                // Release own resources
                 if (user.SendEndPoint != null)
                 {
                     await user.SendEndPoint.ReleaseAsync();
@@ -28,7 +28,7 @@ namespace KurentoDemo.Hubs
                         await endPoint.ReleaseAsync();
                     }
                 }
-                //释放其他人员的资源
+                // Release resources of other users
                 foreach (var u in UserSessions.Values)
                 {
                     if (u.ReceviedEndPoints.TryRemove(id, out WebRtcEndpoint endpoint))

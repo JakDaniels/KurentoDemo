@@ -38,12 +38,13 @@ namespace KurentoDemo.Hubs
         }
 
         /// <summary>
-        /// 若没有人员则释放房间资源
+        /// Release room resources if there are no users
         /// </summary>
         /// <param name="roomID"></param>
         /// <returns></returns>
         public async Task TryRemoveRoomAsync(string roomID)
         {
+            // Release room resources if there are no users
             if (_roomSessions.TryGetValue(roomID, out RoomSession roomSession))
             {
                 if (roomSession.UserSessions.IsEmpty)
